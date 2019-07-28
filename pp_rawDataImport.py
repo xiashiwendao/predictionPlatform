@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 import pymysql
 import traceback
-
-base_path = "C:\\Users\\wenyang.zhang\\Documents\\MySpace\\Workspace\\PredictionPlatform\\Datasource"
+import time
+base_path = "dataset"
 filePaht = os.path.join(base_path, "BANNER.csv")
 _chunksize = 100000
 reader = pd.read_csv(filePaht, iterator=True, chunksize=_chunksize)
@@ -63,10 +63,11 @@ def writeToDB(data):
     # commit to mysql
     conn.commit()
 
-conn = pymysql.connect(user="root", password="root", database=write_db, host="127.0.0.1", charset='utf8')
+conn = pymysql.connect(port=3307, user="root", password="root", database=write_db, host="127.0.0.1", charset='utf8')
 try:
     counter = 0
     for chunk in reader:
+        st = time.time()
         # convert dataframe to array
         data = chunk.values
         db_data = []
@@ -76,7 +77,8 @@ try:
         # writeToDB(db_data)
         db_data = np.array(db_data)
         writeToDB(db_data)
-        print("第" ,counter ,"轮已经完成")
+        et = time.time()
+        print("第" ,counter ,"轮已经完成，花费时间：", (et-st))
         counter += 1
 except Exception:
     print('There is exception happened!', Exception)
