@@ -6,7 +6,7 @@ import os, sys
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
-
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import time
@@ -60,7 +60,6 @@ def model_train(model, X_train, y_train, X_test, y_test):
     #plt.figure(figsize=(15, 12))
     plt.plot(range(len(yHat)), yHat, "r-")
     plt.plot(range(len(y_test)), y_test, "b--")
-    from sklearn.metrics import mean_squared_error
     mse = mean_squared_error(y_test, yHat)
     print("mse: ", mse, "rmse: ", np.sqrt(mse))
     #plot_learning_curves(rf, X_train, y_train)
@@ -84,8 +83,10 @@ df_merge_clean.head(1)
 len(df_merge_clean)
 
 X_train, X_test, y_train, y_test = train_test_split(df_merge_clean.values, labels, test_size=0.2, random_state=42)
-X = df_merge_clean.values
-y = labels
+# X = df_merge_clean.values
+# y = labels
+X = X_train
+y = y_train
 
 lr = LinearRegression()
 lr.fit(X, y)
