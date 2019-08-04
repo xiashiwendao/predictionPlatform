@@ -118,3 +118,10 @@ for i,j,k,l in zip(lr_hat, rf_hat_test, svr_hat_test, gbr_hat_test):
 # print("len(y_train)", len(y_train))
 rf_ensemble = RandomForestRegressor()
 model_train(rf_ensemble, X_ensemble_train, y_train, X_ensemble_test, y_test)
+lr_ensemble = LinearRegression()
+model_train(lr_ensemble, X_ensemble_train, y_train, X_ensemble_test, y_test)
+svr_ensemble =SVR()
+model_train(svr_ensemble, X_ensemble_train, y_train, X_ensemble_test, y_test)
+gbr_ensemble = GradientBoostingRegressor()
+model_train(gbr_ensemble, X_ensemble_train, y_train, X_ensemble_test, y_test)
+
