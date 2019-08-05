@@ -82,12 +82,13 @@ df_merge_clean.head(1)
 
 len(df_merge_clean)
 
-X_train, X_test, y_train, y_test = train_test_split(df_merge_clean.values, labels, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(df_merge_clean.values, labels, test_size=0.1, random_state=42)
 # X = df_merge_clean.values
 # y = labels
 X = X_train
 y = y_train
-
+print("X train size: ", len(X))
+print("X Test size: ", len(X_test))
 lr = LinearRegression()
 lr.fit(X, y)
 lr_hat = lr.predict(X_train)
