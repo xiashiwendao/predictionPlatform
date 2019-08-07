@@ -61,7 +61,7 @@ banner_group_raw = read.csv("dataset\\banner_group.csv")
 banner_group=banner_group_raw[-2]
 head(banner_group)
 banner_trend = merge(trend, banner_group, by="REPORT_DATE")
-head(df_trend, 3)
+#head(df_trend, 3)
 #y = df_trend[["QLI"]]
 #X = df_trend[-2]
 #splitSet = train_test_split(X, y, test_size=0.2)
@@ -70,11 +70,11 @@ head(df_trend, 3)
 #X_test = splitSet$X_test
 #y_test = splitSet$y_test
 #head(X_train, 1)
-trainIndex = createDataPartition(df_trend$QLI,
+trainIndex = createDataPartition(banner_trend$QLI,
                                  p=0.8, list=FALSE,times=1)
 
-train = df_trend[trainIndex,]
-test = df_trend[-trainIndex,]
+train = banner_trend[trainIndex,]
+test = banner_trend[-trainIndex,]
 rf = randomForest(QLI~., data=train,mtry=3,
                   importance=TRUE, na.action=na.omit)
-df_trend["REPORT_DATE"]
+banner_trend["REPORT_DATE"]
