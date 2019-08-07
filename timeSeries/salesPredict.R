@@ -84,9 +84,11 @@ train_test_split(banner_trend_agg)
 randomForest()
 
 cluster1 <- data.frame(a=1:5, b=11:15, c=21:25, d=31:35)
-cluster1
-colMeans(cluster1)
+#row.names(cluster1) = cluster1$c
+cluster1[1:3,1:3]
 
+colMeans(cluster1)
+names(cluster1)
 data("iris")
 head(iris,1)
 
@@ -96,3 +98,20 @@ ozone.rf <- randomForest(Ozone ~ ., data=airquality, mtry=3,
                          importance=TRUE, na.action=na.omit)
 print(ozone.rf)
 head(airquality,5)
+
+library(ModelMetrics)
+
+
+
+data(iris)
+set.seed(111)
+ind <- sample(2, nrow(iris), replace = TRUE, prob=c(0.8, 0.2))
+iris.rf <- randomForest(Species ~ ., data=iris[ind == 1,])
+iris.pred <- predict(iris.rf, iris[ind == 2,])
+iris.pred
+table(observed = iris[ind==2, "Species"], predicted = iris.pred)
+
+
+ts(1:10, frequency = 1, start = c(1959, 1))
+ts(1:10, frequency = 52, start = c(1959, 2))
+ts(1:10, frequency = 12, start = c(1959, 1))
