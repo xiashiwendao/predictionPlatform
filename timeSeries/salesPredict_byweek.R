@@ -53,26 +53,8 @@ banner_trend = sqldf("select * from (select sum(QLI) AS QLI,YEAR_OF_WEEK,WEEK_OF
                 from banner_trend group by YEAR_OF_WEEK,WEEK_OF_YEAR) order by YEAR_OF_WEEK,WEEK_OF_YEAR")
 write.csv(banner_trend, "dataset\\banner_trend_byweek.csv")
 # head(banner_trend, 1)
-banner_trend = banner_trend[-1,]
+#banner_trend = banner_trend[-1,]
 # head(banner_trend, 1)
-# 加入测试集方式，但是无法直接获取MSE
-# head(banner_trend, 3)
-# y = banner_trend[["QLI"]]
-# X = banner_trend[-2]
-# splitSet = train_test_split(X, y, test_size=0.2)
-# X_train = splitSet$X_train
-# y_train = splitSet$y_train
-# X_test = splitSet$X_test
-# y_test = splitSet$y_test
-# head(X_train, 1)
-# 
-# rf = randomForest(QLI~.,)
-# importance(rf)
-# 
-# y_test_Hat = (predict(rf, X_test))
-
-
-
 # 采用随机森林方式处理
 set.seed(42)
 trainIndex = createDataPartition(banner_trend$QLI,
@@ -88,18 +70,16 @@ y_test_Hat = as.vector(y_test_Hat)
 rmse(test[["QLI"]], as.vector(y_test_Hat))
 length(y_test_Hat)
 
-# 采用lineRegression
-library(lineregress)
-
 # 采用时间序列方式处理
 ts.raw = test[["QLI"]]
 ts.ts = ts(ts.raw, start = c(2016,35), end=c(2018,14),frequency = 52)
 # ts.ts
-ts.ma=arima(ts.ts, order=c(2,0,1), seasonal = list(order=c(1,0,0), period=52))
+ts.ma=arima(ts.ts, order=c(0,0,2), seasonal = list(order=c(1,1,0), period=52))
 
-pred_val =predict(ts.ma, 24)
+pred_val =predict(ts.ma, 20)
 # pred_val
-rmse(banner_trend[["QLI"]][-(1:99)], as.vector(pred_val$se))
+rmse(banner_trend[["QLI"]][-(1:103)], as.vector(pred_val$se))
+
 # 线性回归处理
 # train_lm = train[[,-1]]
 # as.vector(train[,-1])
@@ -107,3 +87,20 @@ sa.lm = lm(QLI~., data=train)
 sa.pred = predict(sa.lm, test)
 rmse(test[["QLI"]], as.vector(sa.pred))
 
+# 画趋势图
+data_2016 = sqldf("select * from banner_trend where YEAR_OF_WEEK=2016 order by WEEK_OF_YEAR")
+
+data_2017 = sqldf("select * from banner_trend where YEAR_OF_WEEK=2017 order by WEEK_OF_YEAR")
+data_2018 = sqldf("select * from banner_trend where YEAR_OF_WEEK=2018 order by WEEK_OF_YEAR")
+attach_2016 = rep(0, 52-length(data_2016$QLI))
+# length(data_2016)
+# length(data_2016$QLI)
+length((attach_2016))
+attach_2016 = c(attach_2016, data_2016$QLI)
+
+attach_2018 = rep(0, 52-length(data_2018$QLI))
+attach_2018 = c(data_2018$QLI, attach_2018)
+cycle = c(1:52)
+plot(cycle, attach_2016, type='l', col=2)
+lines(cycle, data_2017$QLI, type='l', col=3)
+lines(cycle, attach_2018, type='l', col=4)
