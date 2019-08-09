@@ -115,3 +115,8 @@ table(observed = iris[ind==2, "Species"], predicted = iris.pred)
 ts(1:10, frequency = 1, start = c(1959, 1))
 ts(1:10, frequency = 52, start = c(1959, 2))
 ts(1:10, frequency = 12, start = c(1959, 1))
+
+
+m <- cbind(1, 1:7) # the '1' (= shorter vector) is recycled
+m <- rbind(as.vector(c(1,2,3)), as.vector(c(4,5,6)))
+m
