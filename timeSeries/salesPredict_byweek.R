@@ -33,7 +33,7 @@ banner_trend = merge(trend, banner_group, by="REPORT_DATE")
 # head(banner_trend)
 banner_trend = sqldf("select * from (select sum(QLI) AS QLI,YEAR_OF_WEEK,WEEK_OF_YEAR
                 ,IS_CHRISTMAS
-                ,LAST_1_MONTH_AVG
+                ,LAST_1_MONTH_AVG 
                 ,LAST_1_MONTH_MID75
                 ,LAST_1_MONTH_MAX
                 ,LAST_1_MONTH_SUM

@@ -74,7 +74,7 @@ library(dplyr)
 # randomForest taste
 data_train = read.csv("dataset\\train_rf.csv")
 data_train$Survived = as.factor(data_train$Survived)
-data_train <- na.omit(data_train)
+# data_train <- na.omit(data_train)
 
 head(data_train, 2)
 dim(data_train)
@@ -92,3 +92,21 @@ rf_default <- train(Survived~.,
                     trControl = trControl)
 # Print the results
 print(rf_default)
+
+data2 = c(1,2,2,3,1,2,3,3,1,2,3,3,1)
+fdata = as.factor(data2)
+fdata
+table(fdata)
+levels(fdata) = c('I','II','III')
+fdata
+table(fdata)
+
+mons = c("March","April","January","November","January",
+           "September","October","September","November","August",
+           "January","November","November","February","May","August",
+           "July","December","August","August","September","November",
+           "February","April")
+mons = factor(mons)
+#levels(mons) = c(1,2,3,4,5,6,7,8,9,10,11,12)
+mons
+table(mons)
