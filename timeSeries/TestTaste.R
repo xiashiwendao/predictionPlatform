@@ -85,13 +85,20 @@ glimpse(data_test)
 trControl = trainControl(method = "cv", number=10, search = "grid")
 set.seed(1234)
 # Run the model
-rf_default <- train(Survived~.,
+rf_default <- train(Survived~Pclass,
                     data = data_train,
                     method = "rf",
                     metric = "Accuracy",
                     trControl = trControl)
 # Print the results
 print(rf_default)
+
+
+
+
+
+
+
 
 data2 = c(1,2,2,3,1,2,3,3,1,2,3,3,1)
 fdata = as.factor(data2)
