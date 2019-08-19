@@ -1,3 +1,6 @@
 {
-    "python.pythonPath": "C:\\Users\\wenyang.zhang\\Documents\\MySpace\\Python27\\python.exe"
+    "python.pythonPath": "D:\\software\\develop\\python\\Python35\\python.exe",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.flake8Enabled": false
 }
