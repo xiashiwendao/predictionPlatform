@@ -11,11 +11,19 @@ class RandomforestOptimizer(object):
         self.X = X_train
         self.y = y_train
         
+    def toString(self):
+        print("I'm RandomforestOptimizer")
+
     def optimize(self):
         print("start default parameters check...")
         rf0 = RandomForestClassifier(oob_score=True, min_samples_split=100,
                                         min_samples_leaf=20, max_depth=8, max_features='sqrt', random_state=10)
-        rf0.fit(X,y)
+        X = self.X.reshape(-1,1)
+        y = self.y.reshape(-1,1)
+        
+        print("x is: \n", X)
+        print("y is: \n", y)
+        rf0.fit(X, y)
         default_oob_score = rf0.oob_score_
         default_n_estimators = rf0.n_estimators
         self.oob_score = default_oob_score # 这个全局变量oob_score将会不断的用于后续的评分
@@ -46,6 +54,34 @@ class RandomforestOptimizer(object):
         if better_flag == True:
             best_max_depth = best_params["max_depth"]
             best_min_samples_split = best_params["min_samples_split"]
+
+        
+
+        # 配对优化min_samples_split和min_samples_leaf两个参数值
+        param_test3 = {'min_samples_split':range(80,150,20), 'min_samples_leaf':range(10,60,10)}
+
+
+        rf0 = RandomForestClassifier(n_estimators= best_n_estimators, max_depth=best_max_depth, min_samples_split=best_min_samples_split,
+                                        min_samples_leaf=20,max_features='sqrt' ,oob_score=True, random_state=10)
+        best_min_samples_split = rf0.max_depth
+        best_min_samples_leaf = rf0.min_samples_split
+
+        (best_params, better_flag) = self.trainTheGridSearch(param_test3, rf0, self.X, self.y)
+        # if can't find better oob score, roll back to default value
+        if better_flag == True:
+            best_min_samples_leaf = best_params["best_min_samples_leaf"]
+            best_min_samples_split = best_params["min_samples_split"]
+
+        # 最后是max_features参数进行调优
+        param_test4 = {'max_features':range(3,11,2)}
+        rf0 = RandomForestClassifier(n_estimators= best_n_estimators, max_depth=best_max_depth, min_samples_split=best_min_samples_split,
+                                        best_min_samples_leaf=best_min_samples_leaf,min_samples_leaf=20,max_features='sqrt' ,oob_score=True, random_state=10)
+        best_max_features = rf0.max_features
+
+        (best_params, better_flag) = self.trainTheGridSearch(param_test3, rf0, self.X, self.y)
+        # if can't find better oob score, roll back to default value
+        if better_flag == True:
+            best_best_max_features = best_params["best_max_features"]
     
     def trainTheGridSearch(self, parameters, rf, X, y):
         gsearch = GridSearchCV(estimator = rf, param_grid = parameters, scoring='roc_auc',cv=5)
