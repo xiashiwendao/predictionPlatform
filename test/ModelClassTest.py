@@ -34,14 +34,47 @@ train_y = y
 # sorted(SCORERS.keys())
 
 rfo = RandomforestOptimizer(train_x, train_y)
-rf = rfo.getOptimizedModel(train_x, train_y)
+#rf = rfo.getOptimizedModel(train_x, train_y)
+rf = RandomForestRegressor()
 rf.fit(train_x, train_y)
 train_y_predict = rf.predict(train_x)
 
 from matplotlib import pyplot as plt
 X = df_date.values
-plt.plot(X, train_y_predict,color="red")
-plt.plot(X, train_y, color="blue")
+# plt.plot(X, train_y_predict,color="red")
+len(X)
+colors = []
+for i in range(21):
+    colors.append('blue')
+colors.append('red')
+colors.append('red')
+colors.append('red')
+plt.plot(X[:-6], train_y[:-6], color='blue')
+plt.plot(X[-7:], train_y[-7:], color='red')
+for i in range(len(X)):
+    x_name.append('a')
+plt.xticks(range(len(X)), x_name)
+
 plt.show()
 
+# from matplotlib.collections import LineCollection
+# import numpy as np
+# X_range =range(len(X))
+# len(X)
+# len(y)
+# print(y)
+# x_array = []
+# for i in range(len(X)):
+#     x_array.append(i+1)
+# print(x_array)
+# segments = np.array([x_array, y]).T.reshape(-1,1,2)
+# lineCol = LineCollection(segments, color=colors)
+# ax = plt.axes()
+# ax.add_collection(lineCol)
+# x_name = []
+# for i in range(len(X)):
+#     x_name.append('a')
+# plt.xticks(x_name)
+
+# plt.show()
 
