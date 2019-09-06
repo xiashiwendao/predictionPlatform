@@ -51,6 +51,7 @@ colors.append('red')
 colors.append('red')
 plt.plot(X[:-6], train_y[:-6], color='blue')
 plt.plot(X[-7:], train_y[-7:], color='red')
+x_name=[]
 for i in range(len(X)):
     x_name.append('a')
 plt.xticks(range(len(X)), x_name)

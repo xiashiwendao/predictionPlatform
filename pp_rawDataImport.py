@@ -6,7 +6,7 @@ import pymysql
 import traceback
 import time
 base_path = "dataset"
-filePaht = os.path.join(base_path, "BANNER.csv")
+filePaht = os.path.join(base_path, "BANNER_2018009_201908.csv")
 _chunksize = 100000
 reader = pd.read_csv(filePaht, iterator=True, chunksize=_chunksize)
 
@@ -63,7 +63,7 @@ def writeToDB(data):
     # commit to mysql
     conn.commit()
 
-conn = pymysql.connect(port=3307, user="root", password="root", database=write_db, host="127.0.0.1", charset='utf8')
+conn = pymysql.connect(port=3306, user="root", password="root", database=write_db, host="127.0.0.1", charset='utf8')
 try:
     counter = 0
     for chunk in reader:
