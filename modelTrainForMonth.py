@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import pymysql
+#import pymysql
 import os, sys
 
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
@@ -113,6 +113,9 @@ reg = lr.fit(df_merge_clean, labels)
 yHat = reg.predict(df_merge_clean)
 print(labels)
 print(yHat)
+print("yHat value is: ")
+for val in yHat:
+    print(val)
 #plt.figure(figsize=(15, 12))
 plt.plot(range(len(df_merge_clean)), yHat, "c-")
 plt.plot(range(len(df_merge_clean)), labels, "b--")
