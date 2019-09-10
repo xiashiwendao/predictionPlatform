@@ -1,20 +1,22 @@
-from optimizerModel import SVROptimizer
+from optimizerModel.SVROptimizer import SVROptimizer
 from matplotlib import pyplot as plt
 import os, sys
 import pandas as pd
 import warnings
-from optimizerModel import SVROptimizer
 
-df_carre_month = pd.read_csv(".\\dataset\\banner_carr_month(2).csv")
+df_carre_month = pd.read_csv("..\\dataset\\banner_carr_month(1).csv")
 print(len(df_carre_month.values))
 
 train_y = df_carre_month["QLI"].values
-train_X = df_carre_month.drop(["Unnamed: 0","QLI"],axis=1)
-del df_carre_month["QLI"]
+X = df_carre_month[df_carre_month['YEAR_OF_WEEK'].isin([2019])]
+train_X = df_carre_month[~df_carre_month['YEAR_OF_WEEK'].isin([2019])].drop(["Unnamed: 0","QLI"],axis=1)
 
 
-svr = SVROptimizer.SVROptimizer(train_X,train_y)
+svr_opt = SVROptimizer(train_X,train_y)
+svr = svr_opt.getOptimizedModel(train_X, train_y)
+
 predict = svr.predict(X)
+del df_carre_month["QLI"]
 
 plt.figure()
 plt.subplot(1, 2, 1)
