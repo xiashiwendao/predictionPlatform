@@ -20,14 +20,14 @@ fit = stl(ts.ts, s.window = "period")
 fit
 library(forecast)
 forecast(fit, 1)
-ts.ma=arima(ts.ts, order=c(2,0,1), seasonal = list(order=c(1,0,0), period=12))
+ts.ma=arima(ts.ts, order=c(1,0,1), seasonal = list(order=c(1,0,0), period=12))
 #plot(ts.ts)
 #plot(ts.ts, n1=c(2016,9), n.ahead=36, type='o')
 #plot(ts.ma)
 pred_val =predict(ts.ma, 6)
-pred_val
+pred_val$pred
 rmse(banner_trend[["QLI"]][-(1:99)], as.vector(pred_val$se))
-# ???Իع鴦??
+# ???Իع�???
 # train_lm = train[[,-1]]
 # as.vector(train[,-1])
 sa.lm = lm(QLI~., data=train)
