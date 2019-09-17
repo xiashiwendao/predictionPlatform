@@ -88,7 +88,7 @@ df_trend_carre_agg = df_trend_carre_filterd.groupby(['REPORT_DATE']).sum().reset
 df_trend_carre_agg.head()
 df_merge = df_banner_agg.merge(df_trend_carre_agg, on=['REPORT_DATE'], how="inner")
 # len(df_merge)
-
+df_merge.to_csv(os.path.join(basePath, "banner_trends_carr_daily.csv"))
 labels = df_merge["QLI"].values
 df_merge_clean = df_merge.copy()
 df_merge_clean = df_merge_clean.drop("QLI", 1)
