@@ -87,34 +87,36 @@ df_trend_carre_filterd.columns
 df_trend_carre_agg = df_trend_carre_filterd.groupby(['REPORT_DATE']).sum().reset_index()
 df_trend_carre_agg.head()
 df_merge = df_banner_agg.merge(df_trend_carre_agg, on=['REPORT_DATE'], how="inner")
-# len(df_merge)
+import time
+df_merge["REPORT_DATE"].head()
+df_merge["YEAR"] = df_merge["REPORT_DATE"].apply(lambda x: time.strptime(x, '%Y-%m-%d').tm_year)
+df_merge["DAY_NO"] = df_merge["REPORT_DATE"].apply(lambda x: time.strptime(x, '%Y-%m-%d').tm_yday)
 df_merge.to_csv(os.path.join(basePath, "banner_trends_carr_daily.csv"))
+
+df_merge = df_merge.drop('REPORT_DATE', 1)
+df_merge.columns
+# len(df_merge)
+
 labels = df_merge["QLI"].values
 df_merge_clean = df_merge.copy()
 df_merge_clean = df_merge_clean.drop("QLI", 1)
 # df_merge_clean.head(1)
 df_merge_clean.columns
-# len(df_merge_clean)
-# X_train = df_merge_clean[0:-6]
-# y_train = labels[0:-6]
-# X_test = df_merge_clean[-6:]
-# y_test = labels[-6:]
-# X_train, X_test, y_train, y_test = train_test_split(df_merge_clean.values, labels, test_size=0.1, random_state=42)
-# X = df_merge_clean.values
-# y = labels
-# X = X_train
-# y = y_train
-# print("X train size: ", len(X))
-# print("X Test size: ", len(X_test))
+X = df_merge_clean.copy()
+y = labels.copy()
+X_train = X[0:654]
+y_train = y[0:654]
+X_test = X[654:]
+y_test = y[654:]
 lr = LinearRegression()
 # real_predict_curve(lr, df_merge_clean, labels)
 reg = lr.fit(df_merge_clean, labels)
 yHat = reg.predict(df_merge_clean)
-print(labels)
-print(yHat)
-print("yHat value is: ")
-for val in yHat:
-    print(val)
+# print(labels)
+# print(yHat)
+# print("yHat value is: ")
+# for val in yHat:
+#     print(val)
 #plt.figure(figsize=(15, 12))
 plt.plot(range(len(df_merge_clean)), yHat, "c-")
 plt.plot(range(len(df_merge_clean)), labels, "b--")
@@ -122,9 +124,22 @@ plt.show()
 mse = mean_squared_error(yHat, y)
 print("mse: ", mse, "rmse: ", np.sqrt(mse))
 
-# rf = RandomForestRegressor(random_state=42,min_samples_leaf=150)
-# real_predict_curve(rf, df_merge_clean, labels)
-
+rf = RandomForestRegressor(random_state=42)
+reg = rf.fit(X_train, y_train)
+# joblib.dump(reg, filename="rf.m")
+feature_import = rf.feature_importances_
+yHat = reg.predict(X_test)
+mse = mean_squared_error(y_test, yHat)
+import numpy as np
+print("mse is: ", mse, "rmse is: ", np.sqrt(mse))
+month_9 = np.sum(y_test[0:24])
+print(month_9)
+month_9_hat = np.sum(yHat[0:24])
+print(month_9_hat)
+mse = mean_squared_error([month_9], [month_9_hat])
+print("month 9 mse: ", mse)
+month_10 = np.sum(y_test[25:49])
+print(month_10)
 # svr =SVR()
 # real_predict_curve(svr, df_merge_clean, labels)
 

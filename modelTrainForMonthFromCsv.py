@@ -8,7 +8,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
+from sklearn.externals import joblib
 from matplotlib import pyplot as plt
+
 import time
 import warnings
 
@@ -45,50 +47,51 @@ X_train = X[0:24]
 y_train = y[0:24]
 X_test = X[24:]
 y_test = y[24:]
-lr = LinearRegression()
-real_predict_curve(lr, X, y)
+# lr = LinearRegression()
+# real_predict_curve(lr, X, y)
 
 rf = RandomForestRegressor()
 # real_predict_curve(rf, df_merge_clean, labels)
 # X_train = X[0:24]
 # y_train = y[0:24]
 reg = rf.fit(X_train, y_train)
+#joblib.dump(reg, filename="rf.m")
 feature_import = rf.feature_importances_
-yHat = reg.predict(X)
-print("yHat value is: ")
-for val in yHat:
-    print(val)
+yHat = reg.predict(X_test)
+# print("yHat value is: ")
+# for val in yHat:
+#     print(val)
 mse = mean_squared_error(yHat[-12:], y[-12:])
 print("mse: ", mse, "rmse: ", np.sqrt(mse))
-plt.plot(range(len(df_merge_clean)), yHat, "r-")
-plt.plot(range(len(df_merge_clean)), labels, "b--")
-plt.show()
+# plt.plot(range(len(df_merge_clean)), yHat, "r-")
+# plt.plot(range(len(df_merge_clean)), labels, "b--")
+# plt.show()
 
 # svr =SVR()
 # real_predict_curve(svr, df_merge_clean, labels)
 
-gbr = GradientBoostingRegressor()
-# real_predict_curve(gbr, df_merge_clean, labels)
-reg = gbr.fit(X_train, y_train)
-yHat = reg.predict(X)
-print("yHat value is: ")
-for val in yHat:
-    print(val)
-mse = mean_squared_error(yHat[-12:], y[-12:])
-print("mse: ", mse, "rmse: ", np.sqrt(mse))
-plt.plot(range(len(df_merge_clean)), yHat, "r-")
-plt.plot(range(len(df_merge_clean)), labels, "b--")
-plt.show()
+# gbr = GradientBoostingRegressor()
+# # real_predict_curve(gbr, df_merge_clean, labels)
+# reg = gbr.fit(X_train, y_train)
+# yHat = reg.predict(X)
+# print("yHat value is: ")
+# for val in yHat:
+#     print(val)
+# mse = mean_squared_error(yHat[-12:], y[-12:])
+# print("mse: ", mse, "rmse: ", np.sqrt(mse))
+# plt.plot(range(len(df_merge_clean)), yHat, "r-")
+# plt.plot(range(len(df_merge_clean)), labels, "b--")
+# plt.show()
 
-def toOne(ar):
-    min_val = np.min(ar)
-    max_val = np.max(ar)
-    one_value = (ar - min_val)/(max_val - min_val)
+# def toOne(ar):
+#     min_val = np.min(ar)
+#     max_val = np.max(ar)
+#     one_value = (ar - min_val)/(max_val - min_val)
 
-    return one_value
+#     return one_value
 
-print("OK")
-toOne(feature_import)
-for corr in df_merge.corr()["QLI"]:
-    print(corr)
+# print("OK")
+# toOne(feature_import)
+# for corr in df_merge.corr()["QLI"]:
+#     print(corr)
 
