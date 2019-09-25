@@ -82,19 +82,28 @@ y_train = y[0:654]
 X_test = X[654:]
 y_test = y[654:]
 len(X_test)
-from optimizerModel.RandomforestOptimizer import RandomforestOptimizer
+# from optimizerModel.RandomforestOptimizer import RandomforestOptimizer
 
-rfo = RandomforestOptimizer(X_train, y_train)
-rf = rfo.getOptimizedModel(X_train, y_train)
+# rfo = RandomforestOptimizer(X_train, y_train)
+# rf = rfo.getOptimizedModel(X_train, y_train)
+rf = RandomForestRegressor(random_state=42, n_estimators=90, max_depth=3, min_samples_split=76, min_samples_leaf=17, max_features=39)
 # reg = rf.fit(X_train, y_train)
 # joblib.dump(reg, filename="rf.m")
 # feature_import = rf.feature_importances_
 yHat = rf.predict(X_test)
+y_train_hat = rf.predict(X_train)
 mse = mean_squared_error(y_test, yHat)
 import numpy as np
 print("mse is: ", mse, "rmse is: ", np.sqrt(mse))
 print("len(y_test): ",len(y_test), "; len(yHat): ", len(yHat))
 month_9 = np.sum(y_test[0:24])
+df_test = pd.DataFrame(y_test)
+df_test['NO'] = range(len(df_test))
+df_hat = pd.DataFrame(yHat)
+df_hat['NO'] = range(len(df_hat))
+y_concat = pd.merge(df_test, df_hat, how='inner', on=['NO'])
+y_concat.to_csv(os.path.join(basePath, "test_with_hat.csv"))
+print(y_concat.reindex())
 print(month_9)
 month_9_hat = np.sum(yHat[0:24])
 print(month_9_hat)
@@ -103,7 +112,7 @@ print("month_9 mse is: ", mse, "month_9 rmse is: ", np.sqrt(mse))
 month_10 = np.sum(y_test[25:49])
 print(month_10)
 from matplotlib import pyplot as plt
-plt.plot(range(len(y_test)), y_test, "--")
+plt.plot(range(len(y_train)), y_train, "--")
 plt.plot(range(len(yHat)), yHat, "-")
 plt.show()
 # svr =SVR()
