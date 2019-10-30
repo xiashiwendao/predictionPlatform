@@ -30,3 +30,12 @@ ax.set_xlim(min(x), max(x))
 ax.set_ylim(min(y), max(y))
 ax.add_collection(lc)
 plt.show()
+
+y = []
+X = np.asarray(range(10))
+# for x in X:
+#     y.append( X^0.95)
+y = X**0.55
+# print(y)
+plt.plot(X, y)
+plt.show()

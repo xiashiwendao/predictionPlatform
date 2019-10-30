@@ -131,5 +131,3 @@ print("mse: ", mse, "rmse: ", np.sqrt(mse))
 
 # gbr = GradientBoostingRegressor()
 # real_predict_curve(gbr, df_merge_clean, labels)
-
-
