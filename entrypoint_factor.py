@@ -26,24 +26,33 @@ password = 'root'
 write_db = 'pp_conf'
 host = 'localhost'
 source_id = getSourceId()
-conn = pymysql.connect(user=user, password=password, database=write_db, host=host, charset='utf8')
-sql = "select name, url, sqld from isf_data_source_conf where uuid='" + str(source_id) + "'"
-df_conf = pd.read_sql(sql, con=conn)
+conn_conf = pymysql.connect(user=user, password=password, database=write_db, host=host, charset='utf8')
+sql = "select name, url, sqld, user, pwd from isf_data_source_conf where uuid='" + str(source_id) + "'"
+df_conf = pd.read_sql(sql, con=conn_conf)
 df_conf.head()
-conn.close()
-name = df_conf['name'][0]
-url = df_conf['url'][0]
-sql = df_conf['sqld'][0]
+
+name = df_conf.name[0]
+url = df_conf.url[0]
+sql = df_conf.sqld[0]
 print("name is: ", name, "url is: ", url)
 
-host = 'localhost'
-port = 3306
-db = 'pp'
-user = 'root'
-password = 'root'
+url_parts = url.split('/')
+host = url_parts[0].split(":")[0]
+port = int(url_parts[0].split(":")[1])
+db = url_parts[1]
+conf = df_conf.head(1)
+user = df_conf.user[0]
+password = df_conf.pwd[0]
+print('host is: ', host, 'port is: ', port, 'db: ', db, 'user: ', user, 'password: ', password)
+
 conn = pymysql.connect(user=user, password=password, database=db, host=host, port=port, charset='utf8')
 df = pd.read_sql(sql, con=conn)
 df = df.drop(["REPORT_DATE"], axis=1)
+df = df.astype(float)
+json = df.corr()['QLI'].to_json()
 
-df.astype(float)
-df.corr()['QLI']
+# update the factor_importance to config database
+insert_sql = "update isf_forecast_factor set factor_impact='" + json + "' where ds_conf_id=" + str(source_id)
+print(insert_sql)
+cursor = conn_conf.cursor()
+cursor.execute(insert_sql)
