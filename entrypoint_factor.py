@@ -7,20 +7,9 @@ import argparse
 import pymysql
 import os
 
-def getSourceId():
-    parseArgs = argparse.ArgumentParser()
-    parseArgs.add_argument("--sourceid", type=str, dest="sourceid")
-    args = vars(parseArgs.parse_args())
-    # return args["sourceid"]
-    return 14
-
 """
 计算指定样本集合（数据源数据）的特征权重，这里采用的协方差矩阵的方式来做估算
 """
-#if __name__ == "__main__":
-    # for i in range(len(sys.argv)):
-    #     print(sys.argv[i])
-
 def caculateImportance(source_id):
     # 连接数据库，获取到sourceid相关信息
     user = "root"
