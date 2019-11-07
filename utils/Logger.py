@@ -1,6 +1,11 @@
 #开发一个日志系统， 既要把日志输出到控制台， 还要写入日志文件  
 import logging
 
+__name__=''
+
+def test():
+    print('test')
+    
 class MyLogger():
     format_dict = {
         1 : logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'),
@@ -41,3 +46,5 @@ class MyLogger():
    
     def getlog(self):
         return self.logger
+
+

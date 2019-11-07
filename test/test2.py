@@ -39,3 +39,14 @@ y = X**0.55
 # print(y)
 plt.plot(X, y)
 plt.show()
+
+markvio = [[0.5,0.2,0.1,0],[0.5, 0, 0, 0], [0, 0.8, 0, 0], [0, 0, 0.9, 1]]
+m = np.matrix(markvio)
+m.T
+m.T * m.T
+
+
+
+import sklearn.datasets
+a=sklearn.datasets.load_digits()
+print(a)

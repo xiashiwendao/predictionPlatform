@@ -6,7 +6,13 @@ import pandas as pd
 import argparse
 import pymysql
 import os
+from utils import DataUtils
+import json
+from utils import Logger
+import buildPredictModel
 
+buildPredictModel.test()
+print(Logger.__name__)
 """
 计算指定样本集合（数据源数据）的特征权重，这里采用的协方差矩阵的方式来做估算
 """
@@ -17,7 +23,7 @@ def caculateImportance(source_id):
     write_db = 'pp_conf'
     host = 'localhost'
     # source_id = getSourceId()
-    conn_conf = pymysql.connect(user=user, password=password, database=write_db, host=host, charset='utf8')
+    conn_conf = DataUtils.getConfigDBConn()
     sql = "select name, url, sqld, user, pwd from isf_data_source_conf where uuid='" + str(source_id) + "'"
     df_conf = pd.read_sql(sql, con=conn_conf)
     df_conf.head()
@@ -47,3 +53,5 @@ def caculateImportance(source_id):
     print(insert_sql)
     cursor = conn_conf.cursor()
     cursor.execute(insert_sql)
+
+# caculateImportance(14)
