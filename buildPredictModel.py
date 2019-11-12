@@ -9,25 +9,9 @@ from utils import DataUtils
 # from utils import Logger
 from utils.Logger import MyLogger
 from utils import Logger
+from utils import Utils
 
-def test():
-    Logger.test()
-    Logger.__name__ = 'Lorry'
-
-test()
-
-
-def getLogger():
-    # get the file name
-    fileUrl = sys.argv[0]
-    filepath, tmpfilename = os.path.split(fileUrl)
-    shotname, extension = os.path.splitext(tmpfilename)
-    
-    # get the logger object
-    logger = MyLogger(logname='log.txt', loglevel=1, logger=shotname).getlog()
-    return logger
-
-logger =getLogger()
+logger = Utils.getLogger()
 logger.debug("get logger!")
 def buildModel(sourceId):
     conn_conf = DataUtils.getConfigDBConn()
@@ -35,12 +19,29 @@ def buildModel(sourceId):
     sourceId=14
     sql = 'select use_factor from isf_forecast_factor where ds_conf_id=' + str(sourceId)
     df = pd.read_sql(sql, conn_conf)
-    conn_conf.close()
-
     factor_raw = df['use_factor'][0]
     factors = json.loads(factor_raw)
-    # factors = eval(factor_raw)
-    logger.debug(factors)
+    factors_join = ','.join(factors)
+
+    sql = 'select sqld from isf_data_source_conf where id=' + str(sourceId)
+    df_source = pd.read_sql(sql, conn_conf)
+    conn_conf.close()
+
+    # build the query sql
+    sqld = df['sqld'][0]
+    from_part  = sql.split('from', maxsplit=1)
+    sql_execute = 'select ' + factors_join + from_part
+
+    # get the history biz data
+    data_conn = DataUtils.getDataDBConn(sourceId)
+    df_sqld = pd.read_sql(sql_execute)
+    data_conn.close()
+
+    # train the model
+    
+
+    
+
 
 
 # buildModel(14)
