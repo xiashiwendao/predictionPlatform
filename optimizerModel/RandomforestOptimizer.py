@@ -19,12 +19,8 @@ class RandomforestOptimizer(object):
 
     def getOptimizedModel(self, X, y):
         print("start default parameters check123...")
+        # build default RF used for base line(just use the default parameter)
         rf0 = RandomForestRegressor(oob_score=True, random_state=10)
-        # X = self.X
-        # y = self.y
-        
-        # print("x is: \n", X)
-        # print("y is: \n", y)
         rf0.fit(X, y)
         default_oob_score = rf0.oob_score_
         default_n_estimators = rf0.n_estimators
@@ -39,7 +35,6 @@ class RandomforestOptimizer(object):
         print(self.surfix, "start n_estimators parameter optimize...")
         param_test1 = {'n_estimators':range(10,100,10)}
         (best_params, better_flag) = self.trainTheGridSearch(param_test1, rf0, self.X, self.y)
-        #if better_flag == True:
         best_n_estimators = best_params["n_estimators"]
         print(self.surfix_2, "default estimators: ", default_n_estimators, "; best estimators: ", best_n_estimators)
         
@@ -134,11 +129,6 @@ class RandomforestOptimizer(object):
     def trainTheGridSearch(self, parameters, rf, X, y):
         gsearch = GridSearchCV(estimator = rf, param_grid = parameters, scoring='neg_mean_squared_error',cv=5)
         gsearch.fit(X,y)
-        # print(self.surfix_3,"gsearch.cv_results_ \n", gsearch.cv_results_)
-        # print(self.surfix_3,"gsearch.best_params_ \n",gsearch.best_params_)
-        # print(self.surfix_3,"gsearch.best_score_ \n", gsearch.best_score_)
-        # test for get oob score, to see if better
-        #rf.fit(X, y)
         op_oob_score=rf.oob_score_
         better_flag = self.oob_score < op_oob_score
         self.oob_score = op_oob_score if better_flag else self.oob_score

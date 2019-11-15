@@ -50,3 +50,17 @@ m.T * m.T
 import sklearn.datasets
 a=sklearn.datasets.load_digits()
 print(a)
+
+import utils
+print(utils.Logger.__name__)
+
+import json
+json_str = '[{"value":"LAST_2_MONTH_MID25","key":"fForecast"},{"value":"IS_12","key":"fChannel"},{"value":"IS_CHRISTMAS","key":"fTime"}]'
+json_obj = json.loads(json_str)
+type(json_obj)
+json_obj['key'=='fForecast']['value']
+
+def test():
+    return 1, 2, 3
+
+a, b, c = test()
